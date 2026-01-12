@@ -26,6 +26,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IApplicationDbContext>(sp =>
                 sp.GetRequiredService<ApplicationDbContext>());
 
+            // 添加这一行：注册 Initialiser
+            services.AddScoped<ApplicationDbContextInitialiser>();
+
             return services;
         }
     }
