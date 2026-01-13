@@ -27,17 +27,22 @@ namespace WebAPI.Controllers
             return await _sender.Send(command);
         }
 
-        [HttpDelete]
-        public async Task<ActionResult> Delete(DeleteUserProfileCommand command)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
         {
-            await _sender.Send(command);
+            await _sender.Send(new DeleteUserProfileCommand(id));
 
             return Ok();
         }
 
-        [HttpPut]
-        public async Task<ActionResult> Update(UpdateUserProfileCommand command)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(int id, UpdateUserProfileCommand command)
         {
+            if (id != command.Id)
+            {
+                return BadRequest();
+            }
+
             await _sender.Send(command);
 
             return Ok();
@@ -46,7 +51,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<UserProfileBriefDto>> Get(int id)
         {
-            return await Mediator.Send(new GetUserProfileQuery() { Id = id });
+            return await _sender.Send(new GetUserProfileQuery() { Id = id });
         }
 
         [HttpPost("GetList")]
