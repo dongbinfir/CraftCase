@@ -15,6 +15,10 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            // 注册 AutoMapper
+            services.AddAutoMapper(cfg =>
+            cfg.AddMaps(Assembly.GetExecutingAssembly()));
+
             // 注册 MediatR
             services.AddMediatR(cfg =>
             {

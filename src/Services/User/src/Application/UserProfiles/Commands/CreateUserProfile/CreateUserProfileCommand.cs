@@ -1,8 +1,4 @@
-﻿using MediatR;
-using User.Application.Common.Interfaces;
-using User.Domain.Entities;
-
-namespace User.Application.UserProfiles.Commands.CreateUserProfile
+﻿namespace User.Application.UserProfiles.Commands.CreateUserProfile
 {
     public record CreateUserProfileCommand : IRequest<int>
     {

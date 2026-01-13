@@ -1,25 +1,25 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using User.Application.Common.Interfaces;
-using User.Domain.Entities;
+﻿using User.Application.UserProfiles.Dtos;
 
 namespace User.Application.UserProfiles.Queries.GetUserProfiles
 {
-    public record GetUserProfilesQuery : IRequest<List<UserProfile>>;
+    public record GetUserProfilesQuery : IRequest<List<UserProfileBriefDto>>;
 
-    public class GetProductsQueryHandler : IRequestHandler<GetUserProfilesQuery, List<UserProfile>>
+    public class GetUserProfilesQueryHandler : IRequestHandler<GetUserProfilesQuery, List<UserProfileBriefDto>>
     {
         private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public GetProductsQueryHandler(IApplicationDbContext context)
+        public GetUserProfilesQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<List<UserProfile>> Handle(GetUserProfilesQuery request, CancellationToken cancellationToken)
+        public async Task<List<UserProfileBriefDto>> Handle(GetUserProfilesQuery request, CancellationToken cancellationToken)
         {
             return await _context.Set<UserProfile>()
                 .AsNoTracking()
+                .ProjectTo<UserProfileBriefDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
     }

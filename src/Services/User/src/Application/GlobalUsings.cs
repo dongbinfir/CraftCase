@@ -1,0 +1,11 @@
+﻿global using MediatR;
+global using User.Application.Common.Interfaces;
+global using User.Domain.Entities;
+global using FluentValidation;
+global using User.Application.Common.Exceptions;
+global using AutoMapper;
+global using User.Domain.Common;
+global using User.Application.Common.Mappings;
+global using AutoMapper.QueryableExtensions;
+global using Microsoft.EntityFrameworkCore;
+global using User.Application.Common.Models;

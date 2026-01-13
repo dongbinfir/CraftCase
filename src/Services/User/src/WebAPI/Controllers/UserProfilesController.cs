@@ -1,8 +1,10 @@
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using User.Application.UserProfiles.Commands.CreateUserProfile;
+using User.Application.UserProfiles.Commands.DeleteUserProfile;
+using User.Application.UserProfiles.Commands.UpdateUserProfile;
+using User.Application.UserProfiles.Dtos;
+using User.Application.UserProfiles.Queries.GetUserProfile;
 using User.Application.UserProfiles.Queries.GetUserProfiles;
-using User.Domain.Entities;
+using User.Application.UserProfiles.Queries.SearchUserProfiles;
 
 namespace WebAPI.Controllers
 {
@@ -19,24 +21,44 @@ namespace WebAPI.Controllers
             _sender = sender;
         }
 
-        /// <summary>
-        /// 获取所有商品
-        /// </summary>
-        [HttpGet]
-        public async Task<ActionResult<List<UserProfile>>> GetUserProfiles()
+        [HttpPost]
+        public async Task<ActionResult<int>> Create(CreateUserProfileCommand command)
         {
-            var result = await _sender.Send(new GetUserProfilesQuery());
-            return Ok(result);
+            return await _sender.Send(command);
         }
 
-        /// <summary>
-        /// 创建商品
-        /// </summary>
-        [HttpPost]
-        public async Task<ActionResult<int>> CreateUserProfile(CreateUserProfileCommand command)
+        [HttpDelete]
+        public async Task<ActionResult> Delete(DeleteUserProfileCommand command)
         {
-            var id = await _sender.Send(command);
-            return CreatedAtAction(nameof(GetUserProfiles), new { id }, id);
+            await _sender.Send(command);
+
+            return Ok();
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Update(UpdateUserProfileCommand command)
+        {
+            await _sender.Send(command);
+
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<UserProfileBriefDto>> Get(int id)
+        {
+            return await Mediator.Send(new GetUserProfileQuery() { Id = id });
+        }
+
+        [HttpPost("GetList")]
+        public async Task<ActionResult<List<UserProfileBriefDto>>> GetList()
+        {
+            return await _sender.Send(new GetUserProfilesQuery());
+        }
+
+        [HttpPost("Search")]
+        public async Task<ActionResult<PaginatedList<UserProfileBriefDto>>> Search(SearchUserProfilesQuery query)
+        {
+            return await _sender.Send(query);
         }
     }
 }
